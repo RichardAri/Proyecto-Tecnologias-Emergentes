@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+// src/components/CreateTask.js
+import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 
 const socket = io('http://localhost:5000');
@@ -13,6 +14,18 @@ const CreateTask = () => {
     setTaskTitle('');
     setAssignedTo('');
   };
+
+  useEffect(() => {
+    socket.on('taskCreated', (task) => {
+      console.log('Nueva tarea creada:', task);
+      // Puedes agregar lógica aquí para actualizar el estado de tu aplicación
+    });
+
+    // Cleanup on component unmount
+    return () => {
+      socket.off('taskCreated');
+    };
+  }, []);
 
   return (
     <form onSubmit={handleSubmit}>
